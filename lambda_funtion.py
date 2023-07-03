@@ -62,7 +62,7 @@ def validate_data(close_friend, self_eval, would_you_rather, risk_define, willin
             response = parse_float(
                 response
             )  # Since parameters are strings it's important to cast values
-            if response <= 0 or > 4:
+            if response <= 0 and <= 4:
                 return build_validation_result(
                     False,
                     "amount",
