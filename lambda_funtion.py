@@ -3,8 +3,6 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 
-today = datetime.date.today()
-age = 0
 
 ### Functionality Helper Functions ###
 def parse_float(n):
@@ -17,25 +15,6 @@ def parse_float(n):
         return float("nan")
         
         
-def calculate_age(birthday):
-    current_date = datetime.now()
-    try:
-        birth_date = datetime.strptime(date_of_birth, "%Y-%m-%d")
-        age = current_date.year - birthday.year
-        # Check if the birth month and day have already occurred this year
-        if (current_date.month, current_date.day) < (birthday.month, birthday.day):
-            age -= 1
-        return age
-    except ValueError:
-        return "Invalid date format. Please provide the date in the format: YYYY-MM-DD"
-        
-def calculate_future_date(current_age, target_age):
-    current_date = datetime.now()
-    # Calculate the remaining years until the target age
-    remaining_years = target_age - current_age
-    # Calculate the future date by adding the remaining years to the current date
-    future_date = current_date + timedelta(days=remaining_years*365)
-    return future_date
         
 def build_validation_result(is_valid, violated_slot, message_content):
     """
@@ -50,29 +29,30 @@ def build_validation_result(is_valid, violated_slot, message_content):
         "message": {"contentType": "PlainText", "content": message_content},
     }
 
-def validate_data(close_friend, self_eval, would_you_rather, risk_define, willingness, intent_request):
+def validate_data(response, intent_request):
     """
     Validates the data provided by the user.
     """
 
     # Validate the amount, it should be > 0
-    for response in close_friend, self_eval, would_you_rather, risk_define, willingness:
-        
-        if response is not None:
-            response = parse_float(
-                response
-            )  # Since parameters are strings it's important to cast values
-            if response <= 0 and <= 4:
+    for rep in response:
+        if rep is not None:
+            rep = parse_float(
+                rep
+                )  # Since parameters are strings it's important to cast values
+            if  1 > rep and rep > 4:
                 return build_validation_result(
                     False,
-                    "amount",
-                    "The amount should be a number between 1 and 4, "
+                    "rep",
+                    "Your response should be a number between 1 and 4, "
                     "please provide a correct response.",
-                )
+                    )
 
     # A True results is returned if age or amount are valid
     return build_validation_result(True, None, None)
-   
+    
+
+
  ## Dialog Actions Helper Functions ###
 def get_slots(intent_request):
     """
@@ -123,25 +103,108 @@ def close(session_attributes, fulfillment_state, message):
         },
     }
 
-    return response
-     
-
-def aggregate_client_score():
-    close_friend, self_eval, would_you_rather, risk_define, willingness = client_risk_tolerance_info()
-    return sum([close_friend, self_eval, would_you_rather, risk_define, willingness])
+    return response   
     
+### Fuction to calcutlate current age and retirement date
+def calculate_retirement_details(intent_request):
+     # Gets the invocation source, for Lex dialogs "DialogCodeHook" is expected.
+    source = intent_request["invocationSource"]
+
+    if source == "DialogCodeHook":
+        # This code performs basic validation on the supplied input slots.
+
+        # Gets all the slots
+        slots = get_slots(intent_request)
+
+        # Validates user's input using the validate_data function
+        validation_result = validate_data(slots, intent_request)
+
+        # If the data provided by the user is not valid,
+        # the elicitSlot dialog action is used to re-prompt for the first violation detected.
+        if not validation_result["isValid"]:
+            slots[validation_result["violatedSlot"]] = None  # Cleans invalid slot
+
+            # Returns an elicitSlot dialog to request new data for the invalid slot
+            return elicit_slot(
+                intent_request["sessionAttributes"],
+                intent_request["currentIntent"]["name"],
+                slots,
+                validation_result["violatedSlot"],
+                validation_result["message"],
+            )
+
+        # Fetch current session attributes
+        output_session_attributes = intent_request["sessionAttributes"]
+
+        # Once all slots are valid, a delegate dialog is returned to Lex to choose the next course of action.
+        return delegate(output_session_attributes, get_slots(intent_request))
     
-def client_risk_tolerance():
-    risk_sum = aggregate_client_score()
-    if isinstance(risk_sum, float) and 1 <= risk_sum <= 20:
-        return risk_sum / 20
-    else:
-        return print("Your answers are not applicable, please input a value between 1-4 for each question")
+    # Retrieve input values from the Lambda event
+    date_of_birth = get_slots(intent_request) ["birthday"]
+    retirement_age = get_slots(intent_request) ["retirement"]
 
+    # Calculate the current age
+    current_date = datetime.now()
+    birth_date = datetime.strptime(date_of_birth, "%Y-%m-%d")
+    current_age = current_date.year - birth_date.year
+    if (current_date.month, current_date.day) < (birth_date.month, birth_date.day):
+        current_age -= 1
 
-def lambda_handler(event, context):
-    # TODO implement
+    # Calculate the years until retirement and retirement date
+    years_until_retirement = int(retirement_age) - current_age
+    retirement_date = current_date + timedelta(days=years_until_retirement * 365)
+    
+    return close(
+         intent_request["sessionAttributes"],
+        "Fulfilled",
+        { 
+            "contentType": "PlainText",
+            "content": """Thank you for your information;
+            you are currently {} and have {} years until you retire. 
+            Your retirement date is {}.
+            """.format(current_age, years_until_retirement, retirement_date.strftime("%Y-%m-%d"))
+        }
+    )
+### Function to calculate client risk tolerance score
+def calculate_response_total(event, context):
+    # Retrieve input values from the Lambda event
+    slot_values = event['currentIntent']['slots']
+    
+    # Initialize the total variable
+    total = 0
+    
+    # Iterate over the slot values and calculate the total
+    for slot_name, slot_value in slot_values.items():
+        if slot_name.startswith('qu_') and slot_value is not None:
+            total += int(slot_value)
+    
+    # Return the response with the calculated total
     return {
-        'statusCode': 200,
-        'body': json.dumps('Hello from Lambda!')
+         {total}
     }
+    
+    
+### Intents Dispatcher #####
+def dispatch(intent_request):
+    """
+    Called when the user specifies an intent for this bot.
+    """
+
+    # Get the name of the current intent
+    intent_name = intent_request["currentIntent"]["name"]
+
+    # Dispatch to bot's intent handlers
+    if intent_name == "SuggestPortfolio":
+        return calculate_retirement_details(intent_request)
+
+    raise Exception("Intent with name " + intent_name + " not supported")
+
+
+### Main Handler ###
+def lambda_handler(event, context):
+    """
+    Route the incoming request based on intent.
+    The JSON body of the request is provided in the event slot.
+    """
+
+    return dispatch(event)
