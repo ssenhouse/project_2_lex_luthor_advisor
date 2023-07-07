@@ -105,8 +105,8 @@ def close(session_attributes, fulfillment_state, message):
 
     return response   
     
-### Fuction to calcutlate current age and retirement date
-def calculate_retirement_details(intent_request):
+### Fuction to build client's profile
+def profile_constructor(intent_request):
      # Gets the invocation source, for Lex dialogs "DialogCodeHook" is expected.
     source = intent_request["invocationSource"]
 
@@ -142,6 +142,13 @@ def calculate_retirement_details(intent_request):
     # Retrieve input values from the Lambda event
     date_of_birth = get_slots(intent_request) ["birthday"]
     retirement_age = get_slots(intent_request) ["retirement"]
+    
+    #Aggregate Risk Profile slots
+    total = 0
+    for slot_name, slot_value in get_slots(intent_request).items():
+        if slot_name.startswith('qu_') and slot_value is not None:
+            total += float(slot_value)
+    
 
     # Calculate the current age
     current_date = datetime.now()
@@ -160,30 +167,13 @@ def calculate_retirement_details(intent_request):
         { 
             "contentType": "PlainText",
             "content": """Thank you for your information;
-            you are currently {} and have {} years until you retire. 
-            Your retirement date is {}.
-            """.format(current_age, years_until_retirement, retirement_date.strftime("%Y-%m-%d"))
+            you are currently {} and have {} years until you retire.
+            Your risk profile score is {} and
+            your retirement date is {}.
+            """.format(current_age, years_until_retirement, total, retirement_date.strftime("%Y-%m-%d"))
         }
     )
-### Function to calculate client risk tolerance score
-def calculate_response_total(event, context):
-    # Retrieve input values from the Lambda event
-    slot_values = event['currentIntent']['slots']
-    
-    # Initialize the total variable
-    total = 0
-    
-    # Iterate over the slot values and calculate the total
-    for slot_name, slot_value in slot_values.items():
-        if slot_name.startswith('qu_') and slot_value is not None:
-            total += int(slot_value)
-    
-    # Return the response with the calculated total
-    return {
-         {total}
-    }
-    
-    
+
 ### Intents Dispatcher #####
 def dispatch(intent_request):
     """
