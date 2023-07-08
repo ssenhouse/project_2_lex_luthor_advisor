@@ -1,6 +1,6 @@
-# Lex Luther Robo-Advisor
+# Lex Luthor Robo-Advisor
 ---
-## Columbia University FinTech Bootcamp - Project 2
+**Columbia University FinTech Bootcamp - Project 2**
 --
 
 # Collaborators
