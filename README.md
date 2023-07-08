@@ -56,7 +56,7 @@ pip install PyPortfolioOpt
 conda activate dev
 jupyter lab
 ```
-*Second: open Amazon Lex and run the python file titled:
+* Second: open Amazon Lex and run the python file titled:
 **lambda_funtion.py**
 
 * Third: open the Jupyter Notebook titled:
