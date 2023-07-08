@@ -185,7 +185,7 @@ def dispatch(intent_request):
 
     # Dispatch to bot's intent handlers
     if intent_name == "SuggestPortfolio":
-        return calculate_retirement_details(intent_request)
+        return profile_constructor(intent_request)
 
     raise Exception("Intent with name " + intent_name + " not supported")
 
