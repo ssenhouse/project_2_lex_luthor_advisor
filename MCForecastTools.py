@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 import os
-import alpaca_trade_api as tradeapi
+#import alpaca_trade_api as tradeapi
 import datetime as dt
 import pytz
 
@@ -168,5 +168,7 @@ class MCSimulation:
             
         metrics = self.simulated_return.iloc[-1].describe()
         ci_series = self.confidence_interval
-        ci_series.index = ["95% CI Lower","95% CI Upper"]
-        return metrics.append(ci_series)
+        ci_series.index = ["95% CI Lower", "95% CI Upper"]
+        metrics_df = pd.DataFrame(metrics).T
+        return metrics_df.append(ci_series)
+        
