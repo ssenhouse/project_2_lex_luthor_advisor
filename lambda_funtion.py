@@ -170,6 +170,7 @@ def profile_constructor(intent_request):
             you are currently {} and have {} years until you retire.
             Your risk profile score is {} and
             your retirement date is {}.
+            We will email you your recommended portfolio and projected returns shortly.
             """.format(current_age, years_until_retirement, total, retirement_date.strftime("%Y-%m-%d"))
         }
     )
