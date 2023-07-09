@@ -82,19 +82,24 @@ In order to make our robo advisor develop a portfolio at a low costs, and with l
 We chose these charegories to allow use to quickly charaterize the assets and provide a projected return for the client based on their risk tolerance. Therefore, it was important for us to build our portfolios based on the risk of the assets returns.  
 
 We believe that while all investors want to maximize their returns, the risk tolerance of the investor is different depending on their age, investment capital, and retirment horizon. Thereofre in order to profile our investors, we took in the following input.
+
         1. Client risk tolerance - quantified after asking qualifying questions to determine a clients appetite for risk
         2. Client investment horizon - we ask for the client's age, and their retirement age to quantify the client's investment
 
 ### Machine Learning to cluster Assets
 In order to determine how to segment the assets in our universe, we used "k-means" and the elbow method to cluster the assets contained within our universe. We chose 3 measures of risk as the features of the assets to model and characterize:
+
         1. Sharpe Ratio = Annual Returns / Annual Std. Deviation
         2. 30 day rolling standard deviation
         3. Annual standard deviation
+        
 ### Results from k-means clustering and interpretation
 We assumed that there would be 4 clusters for our initial k-means cluster. Because we had seperation beween the clusters, we leveraged this model and applied it to our universe. 
+
 ![kmeans_plot](/images/kmeans_features_plot.png)
 
 We created a feature summary table that we leverged to compare our clusters to the assets within our universe.
+
 ![features_summar](/images/cluster_features_summarized.png)
 
 We then created business logic to apply the features table to our universe to see how well our features table was able to cluster our data. We made the assumption that the median 5yr returns and the median standard deviation of our features table, will allow us to cluster our universe into our 3 categories. 
