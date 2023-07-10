@@ -12,6 +12,7 @@ s3_bucket = "lex-luthor-stor"
 s3_key = "profile_data.json"
 
 
+
 ### Functionality Helper Functions ###
 def parse_float(n):
     """
@@ -152,10 +153,10 @@ def profile_constructor(intent_request):
     retirement_age = get_slots(intent_request) ["retirement"]
     
     #Aggregate Risk Profile slots
-    total = 0
+    risk_total = 0
     for slot_name, slot_value in get_slots(intent_request).items():
         if slot_name.startswith('qu_') and slot_value is not None:
-            total += float(slot_value)
+            risk_total += float(slot_value)
     
 
     # Calculate the current age
@@ -173,7 +174,7 @@ def profile_constructor(intent_request):
     profile_data = {
         "current_age": current_age,
         "years_until_retirement": years_until_retirement,
-        "total": total,
+        "risk_total": risk_total,
         "retirement_date": retirement_date.strftime("%Y-%m-%d")
     }
     s3.put_object(
@@ -194,7 +195,7 @@ def profile_constructor(intent_request):
             retirement date is {}.
             This information has been uploaded to your profile.
             We will email you your recommended portfolio and projected returns shortly.
-            """.format(current_age, years_until_retirement, total, retirement_date.strftime("%Y-%m-%d"))
+            """.format(current_age, years_until_retirement, risk_total, retirement_date.strftime("%Y-%m-%d"))
         }
     )
 
