@@ -19,7 +19,6 @@ Robo-advisors are solving this issue by obfuscating the research it takes to suc
 Our team's project creates a robo-advisor that asks the user a series of simple investment questions in order to create a client profile based on risk tolerance.  The bot will then create and optimize a portfolio based on the risk profile, provide investment predictions over the user's desired time horizon, and report that prediction back to the client.
 
 ## Technologies
-
 The majority of this project leverages python 3.7 specifically and assumes that Jupyter Lab has been installed. In addition, you would need to have the following modules installed:
 * pandas
 * datetime
@@ -41,7 +40,6 @@ These modules were leveraged to provide inputs, outputs, and simulations:
 
 ## Installation Guide
 ### To review Project 2:
-
 * First install the following dependent libraries
 ```python
 pip install pandas
@@ -65,13 +63,14 @@ jupyter lab
 * Run all of the code to provide clustering of the investment universe, allocation of assets based on the client risk level, and optimizeation and forecast based on the user time horizon.
 
 ## Resources
-
 Critical to our completing this project were the following websites. We would recommend that you use these resources. They helped us:
 * Understand mean-variance optimization and the application of the PyPortfolioOpt package [https://pyportfolioopt.readthedocs.io/en/latest/UserGuide.html]
 * Understand how to construct a risk tolerance variable to quantify an investor's appetite for investment risk [https://finmasters.com/risk-profile-test/#gref]
 * Source market data on investment assets from yahoo finance, allowing us to create a universe to choose assets quickly [https://github.com/ranaroussi/yfinance]
 
 ## Data Collection & Cleaning
+### Data Universe
+
 When assessing the universe of assets for our robo-advisor to build our portfolio, we wanted to use widely traded securities that were familiar to any investor.  To do so, our team agreed to include the top 30 S&P stocks by market cap, the assets that were included can be seen below and a breakdown of their sectors are below:
 
 ```python
