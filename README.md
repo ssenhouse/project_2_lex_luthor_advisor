@@ -136,6 +136,23 @@ Finally, the user input that would characterize the user, is then applied to the
 ![sample_porfolio](/images/sample_portfolio_table.png)
 
 
+### Portfolio Optimization
+
+Once we have the level of risk that the investor is comfortable, using the [PyPortfolioOpt](https://pyportfolioopt.readthedocs.io/en/latest/index.html) library we set up a portfolio of stocks in the universe that matches our risk profile. The optimizer uses a mean-variance optimization to assign the appropriate weightings for each stock in the portfolio. 
+
+![clean_weights](/images/pyptfop_cleanweights.png)
+
+The portfolio optimizer will then take the input of the amount of money the investor has to invest to run an algorithm calculating how many stocks can be purchased to meet the desired weights of the mean-variance optimization.
+
+![final_portfolio](/images/purchased_shares.png)
+
+Lastly, we run a Monte Carlo simulation based on the investors time frame to show a range of expected results for the portfolio we have built for them. 
+
+![mc_chart](/images/MC_simulation_chart.png)
+
+![mc_stats](/images/MC_simulation_stats.png)
+
+
 
 
 
