@@ -141,11 +141,11 @@ Once we have the level of risk that the investor is comfortable, using the [PyPo
 
 ![clean_weights](/images/pyptfop_cleanweights.png)
 
-The portfolio optimizer will then take the input of the amount of money the investor has to invest to run an algorithm calculating how many stocks can be purchased to meet the desired weights of the mean-variance optimization.
+The portfolio optimizer will then take the input of the amount of money the investor has to invest to run an algorithm calculating how many stocks can be purchased to meet the desired weights of the mean-variance optimization.  For the sake of the excercise, we hardcode the investment amount as $100,000.
 
 ![final_portfolio](/images/purchased_shares.png)
 
-Lastly, we run a Monte Carlo simulation based on the investors time frame to show a range of expected results for the portfolio we have built for them. 
+Lastly, we run a Monte Carlo simulation based on the investors time frame to show a range of expected results for the portfolio we have built for them. This value was also hardcoded to 5 years.
 
 ![mc_chart](/images/MC_simulation_chart.png)
 
