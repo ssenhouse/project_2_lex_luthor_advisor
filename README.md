@@ -11,10 +11,9 @@
 * Jack Hillman
 
 ## Business Case
-![]()
 With the rising cost of living expenses and achievements in medicine that advance life expectancy, it is important to supplement one's income and savings with their investments.  However, in a financial world that continues to evolve, beginning your investment portfolio can be daunting.  Investing is expensive, and unless you work in the financial sector or have an interest in managing your portfolio, it is hard to understand the investing jargon and spend time researching where to allocate your resources.
 
-Robo-advisors are solving this issue by obfuscating the research it takes to successfully invest. Due to the a fact that it is automated it brings down the cost of investing; i.e. fees paid to an investment professional for portfolio construction and rebalancing, and does the research for you.
+Robo-advisors are solving this issue by obfuscating the research it takes to successfully invest. Due to a fact that it is automated it brings down the cost of investing; i.e. fees paid to an investment professional for portfolio construction and rebalancing, and does the research for you.
 
 Our team's project creates a robo-advisor that asks the user a series of simple investment questions in order to create a client profile based on risk tolerance.  The bot will then create and optimize a portfolio based on the risk profile, provide investment predictions over the user's desired time horizon, and report that prediction back to the client.
 
@@ -32,7 +31,7 @@ The majority of this project leverages python 3.7 specifically and assumes that 
 These modules were leveraged to provide inputs, outputs, and simulations:
 1. lambda_function.py
 
-* This module is utilized in Amazon Lex to take user inputs to create a client risk profile based ona  series of questions. The variables from that profile are then passed to our python code determine which cluster of assets best fit the clients risk tolerance.
+* This module is utilized in Amazon Lex to take user inputs to create a client risk profile based on a series of questions. The variables from that profile are then passed to our python code to determine which cluster of assets best fit the clients risk tolerance.
 
 2. MCSimulation.py - Provided by Columbia FinTech BootCamp
 
@@ -60,7 +59,7 @@ jupyter lab
 * Third: open the Jupyter Notebook titled:
 **Asset_Quant_Data.ipynb** 
 
-* Run all of the code to provide clustering of the investment universe, allocation of assets based on the client risk level, and optimizeation and forecast based on the user time horizon.
+* Run all the code to provide clustering of the investment universe, allocation of assets based on the client risk level, and optimization and forecast based on the user time horizon.
 
 ## Resources
 Critical to our completing this project were the following websites. We would recommend that you use these resources. They helped us:
@@ -80,7 +79,7 @@ assets = ["MSFT", "TSLA", "META", "UNH", "JNJ", "JPM", "V", "LLY", "AVGO", "PG",
 
 ![asset_sectors.png](/images/asset_sectors.png)
 
-One may wonder, why did we include solely stocks and not diversify the universe with ETF's and bonds to mitigate the risk?  While this is certainly what would be recommended in a real world scenario, for the sake of our excersize, we wanted to keep assets that were within a relatively similar level of volatility (when compared to ETF's or bonds).  Were we to add those "safer" assets into our universe, we would see much more regimented k-means clusters which would classify all of the individual stocks within the highest risk level.
+One may wonder, why did we include solely stocks and not diversify the universe with ETF's and bonds to mitigate the risk?  While this is certainly what would be recommended in a real-world scenario, for the sake of our exercise, we wanted to keep assets that were within a relatively similar level of volatility (when compared to ETF's or bonds).  Were we to add those "safer" assets into our universe, we would see much more regimented k-means clusters which would classify all of the individual stocks within the highest risk level.
 
 Importing the raw data for our stock universe from Yahoo finance was a relatively painless ETL process.  Using the following lines of code, we were able to download the raw historical data over our desired period of time, extract the specific values required for our analysis, and sort the data by asset instead of by performance measure (opening price, closing price, etc...)
 
@@ -100,16 +99,16 @@ We leveraged Amazon Lex as the interface with the client.IIn order to communicat
 
 
 ## Data Analysis
-In order to make our robo advisor develop a portfolio at a low costs, and with limited oversite, we used an undervervised machine learning model to aid in picking assets for our portfolios. Out hypothesis was to leverage a charactization model to pick assets that we can cluster and segment into three chategories. 
+In order to make our robo-advisor develop a portfolio at a low-cost, and with limited oversite, we used an unsupervised machine learning model to aid in picking assets for our portfolios. Our hypothesis was to leverage a characterization model to pick assets that we can cluster and segment into three categories. 
 
         1. High Risk/High Return
         2. Medium Risk/Medium Return
         3. Low Risk/Low Returns
-We chose these charegories to allow use to quickly charaterize the assets and provide a projected return for the client based on their risk tolerance. Therefore, it was important for us to build our portfolios based on the risk of the assets returns.  
+We chose these categories to allow us to quickly characterize the assets and provide a projected return for the client based on their risk tolerance. Therefore, it was important for us to build our portfolios based on the risk of the assets returns.  
 
-We believe that while all investors want to maximize their returns, the risk tolerance of the investor is different depending on their age, investment capital, and retirment horizon. Thereofre in order to profile our investors, we took in the following input.
+We believe that while all investors want to maximize their returns, the risk tolerance of the investor is different depending on their age, investment capital, and retirement horizon. Therefore, in order to profile our investors, we took in the following input.
 
-        1. Client risk tolerance - quantified after asking qualifying questions to determine a clients appetite for risk
+        1. Client risk tolerance - quantified after asking qualifying questions to determine a client’s appetite for risk
         2. Client investment horizon - we ask for the client's age, and their retirement age to quantify the client's investment
 
 ### Machine Learning to cluster Assets
@@ -120,52 +119,47 @@ In order to determine how to segment the assets in our universe, we used "k-mean
         3. Annual standard deviation
         
 ### Results from k-means clustering and interpretation
-We assumed that there would be 4 clusters for our initial k-means cluster. Because we had seperation beween the clusters, we leveraged this model and applied it to our universe. 
+We assumed that there would be 4 clusters for our initial k-means cluster. Because we had separation between the clusters, we leveraged this model and applied it to our universe. 
 
 ![kmeans_plot](/images/kmeans_features_plot.png)
 
-We created a feature summary table that we leverged to compare our clusters to the assets within our universe.
+We created a feature summary table that we leveraged to compare our clusters to the assets within our universe.
 
 ![features_summar](/images/cluster_features_summarized.png)
 
-We then created business logic to apply the features table to our universe to see how well our features table was able to cluster our data. We made the assumption that the median 5yr returns and the median standard deviation of our features table, will allow us to cluster our universe into our 3 categories. 
+We then created business logic to apply the features table to our universe to see how well our features table was able to cluster our data. We made the assumption that the median 5yr returns and the median standard deviation of our features table will allow us to cluster our universe into our 3 categories. 
 
-Finally, the user input that would characterize the user, is then applied to the label of our portfolio. In the example below, we show a low risk low return profile's portfolio. Note that our cluster 1 seem to fit this characteristic. 
+Finally, the user input that would characterize the user, is then applied to the label of our portfolio. In the example below, we show a low-risk low return profile's portfolio. Note that our cluster 1 seems to fit this characteristic. 
 
 ![sample_porfolio](/images/sample_portfolio_table.png)
 
 
 ### Portfolio Optimization
-Once we have the level of risk that the investor is comfortable, using the [PyPortfolioOpt](https://pyportfolioopt.readthedocs.io/en/latest/index.html) library we set up a portfolio of stocks in the universe that matches our risk profile. The optimizer uses a mean-variance optimization to assign the appropriate weightings for each stock in the portfolio. 
+Once we have the level of risk that the investor is comfortable with, using the [PyPortfolioOpt](https://pyportfolioopt.readthedocs.io/en/latest/index.html) library we set up a portfolio of stocks in the universe that matches our risk profile. The optimizer uses a mean-variance optimization to assign the appropriate weightings for each stock in the portfolio. 
 
 ![clean_weights](/images/pyptfop_cleanweights.png)
 
-The portfolio optimizer will then take the input of the amount of money the investor has to invest to run an algorithm calculating how many stocks can be purchased to meet the desired weights of the mean-variance optimization.  For the sake of the excercise, we hardcode the investment amount as $100,000.
+The portfolio optimizer will then take the input of the amount of money the investor has to invest to run an algorithm calculating how many stocks can be purchased to meet the desired weights of the mean-variance optimization.  For the sake of the exercise, we hardcode the investment amount as $100,000.
 
 ![final_portfolio](/images/purchased_shares.png)
 
-Lastly, we run a Monte Carlo simulation based on the investors time frame to show a range of expected results for the portfolio we have built for them. This value was also hardcoded to 5 years.
+Lastly, we run a Monte Carlo simulation based on the investors’ time frame to show a range of expected results for the portfolio we have built for them. This value was also hardcoded to 5 years.
 
 ![mc_chart](/images/MC_simulation_chart.png)
 
 ![mc_stats](/images/MC_simulation_stats.png)
 
 ## Next Steps
-This project has the potential to continue growing and evolving.  Our team forsees the following as next steps to build onto the project:
+This project has the potential to continue growing and evolving.  Our team foresees the following as next steps to build onto the project:
 
 * Diversification of our universe:
-  - Addition of ETF’s, bonds, and small/mid cap stocks then having a method that diversifies the portfolio to allow for a mixture of stocks and safer assets, while keeping to the clients risk profile.
+  - Addition of ETF’s, bonds, and small/mid cap stocks then having a method that diversifies the portfolio to allow for a mixture of stocks and safer assets, while keeping to the clients’ risk profile.
 * Further analysis:
-  - Delving deeper into the definition of client risk profiles via additional questions or excercises.
+  - Delving deeper into the definition of client risk profiles via additional questions or exercises.
   - Use of different machine learning models to classify assets by volatility
 * Evolution of bot
-  - Summarize forecast results to client in an easy to understand user interface/module.
-  - Create a client database where we have an employee ID, where the client can refer back to their profile and make changes as necessary.
-
-
-
-
-
+  - Summarize forecast results to client in an easy-to-understand user interface/module.
+  - Create a client database where we have an employee ID, where the client can refer to their profile and make changes as necessary.
 
 
  
