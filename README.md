@@ -6,7 +6,7 @@
 ## Collaborators
 * Sean Senhouse 
 * Thomas Magee 
-* Ozwald Roche
+* Oswald Roche
 * Philip Shum
 * Jack Hillman
 
@@ -26,6 +26,10 @@ Most of this project leverages Python 3.7 specifically and assumes that Jupyter 
 * sklearn
 * pypfopt
 * json
+* boto3
+* AWS Lex
+* AWS Lambda
+* AWS S3
 
 ## Custom Modules 
 These modules were leveraged to provide inputs, outputs, and simulations:
@@ -92,7 +96,7 @@ Y = data[assets].pct_change().dropna()
 ### Client Facing Inputs/Outputs
 ![show the input from Amazon Lex](/images/Intent-Example-Amazon_Lex.png)
 
-We leveraged Amazon Lex as the interface with the client. To communicate the inputs and outputs to the client, we leveraged Amazon Lex to input information from the client. 
+We leveraged Amazon Lex as the interface with the client. Clients are asked a series of questions to build their profile. Some of the questions were used to calculate their risk profile that is used by the model. The clients profile is then saved to an S3 bucket as a json file. 
 
 
 ## Data Analysis
@@ -157,7 +161,7 @@ This project has the potential to continue growing and evolving. Our team forese
   - Use of different machine learning models to classify assets by volatility
 * Evolution of bot
   - Summarize forecast results to the client in an easy-to-understand user interface/module.
-  - Create a client database where we have an employee ID, where the client can refer to their profile and make changes as necessary.
+  - Create a client database where we have an client ID, where the client can refer to their profile and make changes as necessary.
 
 
  
