@@ -1,7 +1,15 @@
-import json
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+import boto3
+import io
+import os
+import json
 
+
+s3 = boto3.client("s3")
+
+s3_bucket = "lex-luthor-stor"
+s3_key = "profile_data.json"
 
 
 ### Functionality Helper Functions ###
@@ -161,6 +169,20 @@ def profile_constructor(intent_request):
     years_until_retirement = int(retirement_age) - current_age
     retirement_date = current_date + timedelta(days=years_until_retirement * 365)
     
+    # Write values to S3 bucket
+    profile_data = {
+        "current_age": current_age,
+        "years_until_retirement": years_until_retirement,
+        "total": total,
+        "retirement_date": retirement_date.strftime("%Y-%m-%d")
+    }
+    s3.put_object(
+        Body=json.dumps(profile_data),
+        Bucket=s3_bucket,
+        Key=s3_key
+    )
+
+    
     return close(
          intent_request["sessionAttributes"],
         "Fulfilled",
@@ -169,7 +191,8 @@ def profile_constructor(intent_request):
             "content": """Thank you for your information;
             you are currently {} and have {} years until you retire.
             Your risk profile score is {} and
-            your retirement date is {}.
+            retirement date is {}.
+            This information has been uploaded to your profile.
             We will email you your recommended portfolio and projected returns shortly.
             """.format(current_age, years_until_retirement, total, retirement_date.strftime("%Y-%m-%d"))
         }
