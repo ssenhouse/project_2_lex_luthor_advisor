@@ -136,7 +136,6 @@ Finally, the user input that would characterize the user, is then applied to the
 
 
 ### Portfolio Optimization
-
 Once we have the level of risk that the investor is comfortable, using the [PyPortfolioOpt](https://pyportfolioopt.readthedocs.io/en/latest/index.html) library we set up a portfolio of stocks in the universe that matches our risk profile. The optimizer uses a mean-variance optimization to assign the appropriate weightings for each stock in the portfolio. 
 
 ![clean_weights](/images/pyptfop_cleanweights.png)
@@ -150,6 +149,18 @@ Lastly, we run a Monte Carlo simulation based on the investors time frame to sho
 ![mc_chart](/images/MC_simulation_chart.png)
 
 ![mc_stats](/images/MC_simulation_stats.png)
+
+## Next Steps
+This project has the potential to continue growing and evolving.  Our team forsees the following as next steps to build onto the project:
+
+* Diversification of our universe:
+  - Addition of ETF’s, bonds, and small/mid cap stocks then having a method that diversifies the portfolio to allow for a mixture of stocks and safer assets, while keeping to the clients risk profile.
+* Further analysis:
+  - Delving deeper into the definition of client risk profiles via additional questions or excercises.
+  - Use of different machine learning models to classify assets by volatility
+* Evolution of bot
+  - Summarize forecast results to client in an easy to understand user interface/module.
+  - Create a client database where we have an employee ID, where the client can refer back to their profile and make changes as necessary.
 
 
 
