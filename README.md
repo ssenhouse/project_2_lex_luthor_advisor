@@ -3,14 +3,14 @@
 **Columbia University FinTech Bootcamp - Project 2**
 --
 
-# Collaborators
+## Collaborators
 * Sean Senhouse 
 * Thomas Magee 
 * Ozwald Roche
 * Philip Shum
 * Jack Hillman
 
-# Business Case
+## Business Case
 ![]()
 With the rising cost of living expenses and achievements in medicine that advance life expectancy, it is important to supplement one's income and savings with their investments.  However, in a financial world that continues to evolve, beginning your investment portfolio can be daunting.  Investing is expensive, and unless you work in the financial sector or have an interest in managing your portfolio, it is hard to understand the investing jargon and spend time researching where to allocate your resources.
 
@@ -18,7 +18,7 @@ Robo-advisors are solving this issue by obfuscating the research it takes to suc
 
 Our team's project creates a robo-advisor that asks the user a series of simple investment questions in order to create a client profile based on risk tolerance.  The bot will then create and optimize a portfolio based on the risk profile, provide investment predictions over the user's desired time horizon, and report that prediction back to the client.
 
-# Technologies
+## Technologies
 
 The majority of this project leverages python 3.7 specifically and assumes that Jupyter Lab has been installed. In addition, you would need to have the following modules installed:
 * pandas
@@ -29,7 +29,7 @@ The majority of this project leverages python 3.7 specifically and assumes that 
 * pypfopt
 * json
 
-# Custom Modules 
+## Custom Modules 
 These modules were leveraged to provide inputs, outputs, and simulations:
 1. lambda_function.py
 
@@ -40,7 +40,7 @@ These modules were leveraged to provide inputs, outputs, and simulations:
 * This module is used to forecast the future returns of the portfolio over the client's investment horizon.
 
 ## Installation Guide
-### To review Project 1:
+### To review Project 2:
 
 * First install the following dependent libraries
 ```python
@@ -64,8 +64,35 @@ jupyter lab
 
 * Run all of the code to provide clustering of the investment universe, allocation of assets based on the client risk level, and optimizeation and forecast based on the user time horizon.
 
+## Resources
+
+Critical to our completing this project were the following websites. We would recommend that you use these resources. They helped us:
+* Understand mean-variance optimization and the application of the PyPortfolioOpt package [https://pyportfolioopt.readthedocs.io/en/latest/UserGuide.html]
+* Understand how to construct a risk tolerance variable to quantify an investor's appetite for investment risk [https://finmasters.com/risk-profile-test/#gref]
+* Source market data on investment assets from yahoo finance, allowing us to create a universe to choose assets quickly [https://github.com/ranaroussi/yfinance]
+
 ## Data Collection & Cleaning
-Details for data collection from yfinance
+When assessing the universe of assets for our robo-advisor to build our portfolio, we wanted to use widely traded securities that were familiar to any investor.  To do so, our team agreed to include the top 30 S&P stocks by market cap, the assets that were included can be seen below and a breakdown of their sectors are below:
+
+```python
+assets = ["MSFT", "TSLA", "META", "UNH", "JNJ", "JPM", "V", "LLY", "AVGO", "PG", "MA", "HD", "MRK", "NVDA", "AMZN", "BRK-B",
+         "GOOG", "XOM", "CVX", "PEP", "COST", "KO", "ABBV", "ADBE", "WMT", "MCD", "CSCO", "CRM"]
+```
+
+![asset_sectors.png](/images/asset_sectors.png)
+
+One may wonder, why did we include solely stocks and not diversify the universe with ETF's and bonds to mitigate the risk?  While this is certainly what would be recommended in a real world scenario, for the sake of our excersize, we wanted to keep assets that were within a relatively similar level of volatility (when compared to ETF's or bonds).  Were we to add those "safer" assets into our universe, we would see much more regimented k-means clusters which would classify all of the individual stocks within the highest risk level.
+
+Importing the raw data for our stock universe from Yahoo finance was a relatively painless ETL process.  Using the following lines of code, we were able to download the raw historical data over our desired period of time, extract the specific values required for our analysis, and sort the data by asset instead of by performance measure (opening price, closing price, etc...)
+
+```python
+og_data = yf.download(assets, start = start, end = end)
+data = og_data.loc[:,('Adj Close', slice(None))]
+data.columns = assets
+
+Y = data[assets].pct_change().dropna()
+```
+![Y_data.png](/images/Y_data.png)
 
 ### Client Facing Inputs/Outputs
 ![show the input from Amazon Lex](/images/Intent-Example-Amazon_Lex.png)
@@ -73,7 +100,7 @@ Details for data collection from yfinance
 We leveraged Amazon Lex as the interface with the client.IIn order to communicate the inputs and outputs to the client, we leveraged Amazon Lex to input information from the client. 
 
 
-## Data Analaysis
+## Data Analysis
 In order to make our robo advisor develop a portfolio at a low costs, and with limited oversite, we used an undervervised machine learning model to aid in picking assets for our portfolios. Out hypothesis was to leverage a charactization model to pick assets that we can cluster and segment into three chategories. 
 
         1. High Risk/High Return
@@ -107,6 +134,8 @@ We then created business logic to apply the features table to our universe to se
 Finally, the user input that would characterize the user, is then applied to the label of our portfolio. In the example below, we show a low risk low return profile's portfolio. Note that our cluster 1 seem to fit this characteristic. 
 
 ![sample_porfolio](/images/sample_portfolio_table.png)
+
+
 
 
 
