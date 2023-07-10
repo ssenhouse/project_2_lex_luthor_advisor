@@ -149,6 +149,8 @@ def profile_constructor(intent_request):
         return delegate(output_session_attributes, get_slots(intent_request))
     
     # Retrieve input values from the Lambda event
+    name = get_slots(intent_request) ["name"]
+    investment_amount = get_slots(intent_request) ["investment_amount"]
     date_of_birth = get_slots(intent_request) ["birthday"]
     retirement_age = get_slots(intent_request) ["retirement"]
     
@@ -172,6 +174,8 @@ def profile_constructor(intent_request):
     
     # Write values to S3 bucket
     profile_data = {
+        "name": name,
+        "investment_amount": int(investment_amount),
         "current_age": current_age,
         "years_until_retirement": years_until_retirement,
         "risk_total": risk_total,
